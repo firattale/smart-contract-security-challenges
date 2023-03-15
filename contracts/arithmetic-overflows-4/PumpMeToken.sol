@@ -67,9 +67,6 @@ contract PumpMeToken {
 
   function batchTransfer(address[] memory _receivers, uint _value) external returns (bool) {
     
-    // _receivers = [attacker.address, deployer.address]
-    // _value = 5.789604461865814e76
-    // totalAmount = 0
     uint totalAmount = _receivers.length * _value;
     require(_value > 0, "Value can't be 0" );
     require(balances[msg.sender] >= totalAmount, "Not enough tokens");
