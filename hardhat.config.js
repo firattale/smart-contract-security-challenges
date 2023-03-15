@@ -1,7 +1,14 @@
 require('@nomicfoundation/hardhat-toolbox');
 require('dotenv').config({ path: __dirname + '/.env' });
 
-let scriptName = process.argv[3];
+let scriptName;
+
+if(process.argv[3] != undefined) {
+  scriptName = process.argv[3];
+} else {
+  scriptName = ""
+}
+
 const BLOCK_HEIGHT = 15969633;
 
 if (
