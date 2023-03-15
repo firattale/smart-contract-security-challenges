@@ -27,7 +27,6 @@ contract CryptoEmpireGame is IERC1155Receiver {
     }
 
     // List an item fro sale (AMOUNT / quantity is always 1)
-    // @audit-issue Doens't implement checks-effects-interactions
     function listForSale(uint256 _nftId, uint256 _price) external {
 
         require(cryptoEmpireToken.balanceOf(msg.sender, _nftId) > 0, "You don't own this NFT");
@@ -43,7 +42,6 @@ contract CryptoEmpireGame is IERC1155Receiver {
     }
 
     // Buy a listed item
-    // @audit-ok does implement checks-effects-interactions
     function buy(uint256 _listingId) payable external {
 
         Listing storage listing = listings[_listingId];
@@ -62,7 +60,6 @@ contract CryptoEmpireGame is IERC1155Receiver {
     }
 
     // Stake NFTs
-    // @audit-issue Doens't implement checks-effects-interactions
     function stake(uint256 _nftId) external {
 
         require(cryptoEmpireToken.balanceOf(msg.sender, _nftId) > 0, "You don't own this NFT");
@@ -73,7 +70,6 @@ contract CryptoEmpireGame is IERC1155Receiver {
     }
 
     // Unstake NFTs
-    // @audit-issue Doens't implement checks-effects-interactions
     function unstake(uint256 _nftId) external {
 
         require(stakedNfts[msg.sender][_nftId], "You haven't staked this NFT");

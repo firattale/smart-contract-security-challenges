@@ -20,14 +20,12 @@ contract ChainLend {
         borrowToken = IERC20(_borrowToken);
     }
 
-    // @audit-issue doesn't follow checks-effects-interactions
     function deposit(uint256 amount) public {
         uint256 deposited = deposits[msg.sender];
         depositToken.transferFrom(msg.sender, address(this), amount);
         deposits[msg.sender] = deposited + amount;
     }
 
-    // @audit-ok does follow checks-effects-interactions
     // Can only be called if the debt is repayed
     function withdraw(uint256 amount) public {
 
@@ -39,7 +37,6 @@ contract ChainLend {
         depositToken.transfer(msg.sender, amount);
     }
 
-    // @audit-ok does follow checks-effects-interactions
     // Assuming correct prices and oracles are in place to calculate the correct borrow limit
     // For smplicity purposes, setting the imBTC oracle price to 20,000 USDC for 1 imBTC.
     function borrow(uint256 amount) public {
@@ -59,7 +56,6 @@ contract ChainLend {
         borrowToken.transfer(msg.sender, amount);
     }
 
-    // @audit-issue doesn't follow checks-effects-interactions
     function repay(uint256 amount) public{
 
         require(debt[msg.sender] > 0, "You don't have any debt");

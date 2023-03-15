@@ -17,8 +17,6 @@ contract TimeLock {
     }
 
     function increaseMyLockTime(uint _secondsToIncrease) public {
-        // 1234567 
-        // MAX_UINT256 (2^256) + 1 - 1234567
         getLocktime[msg.sender] += _secondsToIncrease;
     }
 
