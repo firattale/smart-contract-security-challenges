@@ -1,19 +1,21 @@
 require('@nomicfoundation/hardhat-toolbox');
 require('dotenv').config({ path: __dirname + '/.env' });
 
-let scriptName = process.env.npm_lifecycle_script;
+let scriptName = process.argv[3];
+const BLOCK_HEIGHT = 15969633;
 
 if (
   scriptName.includes('reentrancy-3') ||
   scriptName.includes('reentrancy-4') ||
   scriptName.includes('erc20-2')
 ) {
+  console.log(`Forking Mainnet Block Height ${BLOCK_HEIGHT}`);
   module.exports = {
     networks: {
       hardhat: {
         forking: {
           url: process.env.MAINNET,
-          blockNumber: 15969633,
+          blockNumber: BLOCK_HEIGHT,
         },
       },
     },
