@@ -4,7 +4,7 @@ const { expect } = require('chai');
 describe('Randomness Vulnerabilities Exercise 2', function () {
 
     let deployer, attacker;
-    const INITAL_POT = ethers.utils.parseEther('20');
+    const INITIAL_POT = ethers.utils.parseEther('20');
     const GAME_FEE = ethers.utils.parseEther('1');
 
     before(async function () {
