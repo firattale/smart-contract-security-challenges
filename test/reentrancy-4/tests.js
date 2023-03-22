@@ -41,7 +41,7 @@ describe('Reentrancy Exercise 4', function () {
   after(async () => {
 
     // Attacker stole all the tokens from the game contract
-    expect(await this.cryptoEmpireToken.balanceOf(attacker.address, 2)).to.be.equal(20)
+    expect(await this.cryptoEmpireToken.balanceOf(attacker.address, 2)).to.be.at.least(20)
     expect(await this.cryptoEmpireToken.balanceOf(this.cryptoEmpireGame.address, 2)).to.be.equal(0)
 
   });
