@@ -1,5 +1,5 @@
 {
-  "name": "sch-solutions-part-1",
+  "name": "sch-exercises-part-1",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
