@@ -12,7 +12,7 @@ describe('Randomness Vulnerabilites Exercise 1', function () {
         [deployer, attacker] = await ethers.getSigners();
         this.attackerInitialBalance = await ethers.provider.getBalance(attacker.address);
 
-        // Deploy wallet and deposit 100 ETH
+        // Deploy wallet and deposit 10 ETH
         const gameFactory = await ethers.getContractFactory(
             'contracts/randomness-vulnerabilities-1/Game.sol:Game',
             deployer
