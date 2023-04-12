@@ -18,10 +18,10 @@ describe('Randomness Vulnerabilities Exercise 2', function () {
             'contracts/randomness-vulnerabilities-2/Game2.sol:Game2',
             deployer
         );
-        this.game = await gameFactory.deploy({value: INITAL_POT});
+        this.game = await gameFactory.deploy({value: INITIAL_POT});
 
         let inGame = await ethers.provider.getBalance(this.game.address);
-        expect(inGame).to.equal(INITAL_POT);
+        expect(inGame).to.equal(INITIAL_POT);
     });
 
     it('Exploit', async function () {
@@ -38,6 +38,6 @@ describe('Randomness Vulnerabilities Exercise 2', function () {
         // Attacker supposed to own the stolen ETH (-0.2 ETH for gas...)
         expect(
             await ethers.provider.getBalance(attacker.address)
-        ).to.be.gt(this.attackerInitialBalance.add(INITAL_POT).sub(ethers.utils.parseEther('0.2')));
+        ).to.be.gt(this.attackerInitialBalance.add(INITIAL_POT).sub(ethers.utils.parseEther('0.2')));
     });
 });
