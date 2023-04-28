@@ -1,4 +1,4 @@
-# sch-exercises-part-1
+# typescript-sch-exercises-part-1
 JohnnyTime's smart contract hacking course part 1 exercises.
 
 # Smart Contract Hacking Exercises Guidelines
@@ -27,7 +27,7 @@ JohnnyTime's smart contract hacking course part 1 exercises.
 ### Exercise Execution Example
 In case you are working on the exercise "reentrancy-2":
 * Feel free to create contracts under `./contracts/reentrancy-2/`
-* Feel free to change `./tests/reentrancy-2/tests.js` file
+* Feel free to change `./tests/reentrancy-2/tests.ts` file
 
 Execute from the root folder: `npm run reentrancy-2` to check if you completed the exercise successfully.
 
@@ -41,5 +41,4 @@ npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
-npx hardhat run scripts/deploy.js
 ```
