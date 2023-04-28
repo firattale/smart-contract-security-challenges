@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
  * @author JohnnyTime (https://smartcontractshacking.com)
  */
 contract ToTheMoon is ERC20Pausable {
-
     address public owner;
 
     modifier onlyOwner() {
@@ -27,7 +26,7 @@ contract ToTheMoon is ERC20Pausable {
     }
 
     function pause(bool state) external onlyOwner {
-        if(state) {
+        if (state) {
             Pausable._pause();
         } else {
             Pausable._unpause();
