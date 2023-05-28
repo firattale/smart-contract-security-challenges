@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 
-/**
- * @title TimeLock
- * @author JohnnyTime (https://smartcontractshacking.com)
- */
-contract TimeLock {
+contract TimeLockSecured {
     mapping(address => uint256) public getBalance;
     mapping(address => uint256) public getLockTime;
 

